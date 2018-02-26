@@ -1,7 +1,12 @@
+<% if session[:success] %>
+  <div class="flash success">
+    <p><%= session.delete(:success) %></p>
+  </div>
+<% end %>
 <ul id="lists">
-  <% @lists.each do |list| %>
+  <% @lists.each_with_index do |list, idx| %>
     <li>
-      <a>
+      <a href="/lists/<%= idx %>">
         <h2>
           <%= list[:name] %> <p><%= list[:todos].size %></p>
         </h2>
@@ -10,4 +15,6 @@
   <% end %>
 </ul>
 
-<a href="/lists/new">New list</a>
+<% content_for :header_links do %>
+  <a href="/lists/new">New list</a>
+<% end %>
