@@ -52,9 +52,31 @@ post '/lists' do
   end
 end
 
-
+# View a list with its todos
 get '/lists/:idx' do
   list_idx = params[:idx].to_i
   @list_detail = session[:lists][list_idx]
-  erb :todo, layout: :layout
+  erb :list, layout: :layout
+end
+
+# Editing an existing todo list
+get '/lists/:idx/edit' do
+  @list_idx = params[:idx].to_i
+  @list_detail = session[:lists][@list_idx]
+  erb :list_edit, layout: :layout
+end
+
+post '/lists/:idx' do
+  list_name = params[:list_name].strip
+  list_idx = params[:idx].to_i
+  @list_detail = session[:lists][list_idx]
+  error = error_for_list_name(list_name)
+  if error && @list_detail[:name] != list_name
+    session[:error] = error
+    erb :list_edit, layout: :layout
+  else
+    @list_detail[:name] = list_name
+    session[:success] = 'The list has been editted successfully.'
+    redirect "/lists/#{list_idx}"
+  end
 end
