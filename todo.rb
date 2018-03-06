@@ -54,18 +54,19 @@ end
 
 # View a list with its todos
 get '/lists/:idx' do
-  list_idx = params[:idx].to_i
-  @list_detail = session[:lists][list_idx]
+  @list_id = params[:idx].to_i
+  @list_detail = session[:lists][@list_id]
   erb :list, layout: :layout
 end
 
 # Editing an existing todo list
 get '/lists/:idx/edit' do
-  @list_idx = params[:idx].to_i
-  @list_detail = session[:lists][@list_idx]
+  @list_id = params[:idx].to_i
+  @list_detail = session[:lists][@list_id]
   erb :list_edit, layout: :layout
 end
 
+# Edit a name of a list
 post '/lists/:idx' do
   list_name = params[:list_name].strip
   list_idx = params[:idx].to_i
@@ -78,5 +79,35 @@ post '/lists/:idx' do
     @list_detail[:name] = list_name
     session[:success] = 'The list has been editted successfully.'
     redirect "/lists/#{list_idx}"
+  end
+end
+
+# Destroy an entire todo list
+post '/lists/:idx/delete' do
+  list_idx = params[:idx].to_i
+  session[:lists].delete_at(list_idx)
+  session[:success] = 'The list has been editted successfully.'
+  redirect "/lists"
+end
+
+def error_for_todo_name(todo_name, todos)
+  if !(1..100).cover? todo_name.size
+    'Todo item must have between 1 and 100 characters.'
+  end
+end
+
+# Create a new todo item into the list
+post '/lists/:idx/todos' do
+  @list_id = params[:idx].to_i
+  @list_detail = session[:lists][@list_id]
+  todo = params[:todo].strip  
+  error = error_for_todo_name(todo, @list_detail[:todos])
+  if error
+    session[:error] = error
+    erb :list, layout: :layout
+  else
+    @list_detail[:todos] << { name: todo, completed: false }
+    session[:success] = 'The todo was added.'
+    redirect "lists/#{@list_id}"
   end
 end

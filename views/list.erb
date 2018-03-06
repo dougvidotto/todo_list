@@ -2,17 +2,23 @@
   <header>
     <h2 id="lists"><%= @list_detail[:name] %></h2>
     <ul>
-      <li><a class="edit" href="/lists/<%= params[:idx] %>/edit">Edit List</a></li>
+      <li><a class="edit" href="/lists/<%= @list_id %>/edit">Edit List</a></li>
     </ul>
   </header>
+  <ul>
+    <% @list_detail[:todos].each do |todo| %>
+      <li><h3><%= todo[:name] %></h3></li>
+    <% end %>
+  </ul>
 </section>
-<form action="/todos" method="post">
+
+<form action="/lists/<%= params[:idx] %>/todos" method="post">
   <dl>
     <dt>
-      <label for="todo_name">Enter a new todo item:</label>
+      <label for="todo">Enter a new todo item:</label>
     </dt>
     <dd>
-      <input name="todo_name" placeholder="Todo text" type="text" value="">
+      <input name="todo" placeholder="Something to do" type="text" value="<%= params[:todo] %>">
     </dd>
   </dl>
   <fieldset class="actions">

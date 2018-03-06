@@ -1,11 +1,15 @@
 <section id="todos">
   <header>
-    <h2>
-      <%= @list_detail[:name] %>
-      <ul>
-        <li class="delete"><a href="/lists/<%= params[:idx] %>/delete">Delete List</a></li>
-      </ul>
-    </h2>
+    <h2> Editing '<%= @list_detail[:name] %>'</h2>
+    <ul>
+      <li>
+        <form action="/lists/<%= params[:idx] %>/delete" method="post">
+          <button class="delete" type="submit">
+            Delete List
+          </button>
+        </form>
+      </li>
+    </ul>
   </header>
 </section>
 
