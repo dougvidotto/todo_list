@@ -122,11 +122,20 @@ post '/lists/:list_index/todos/:todo_index/delete' do
   redirect "lists/#{@list_id}"
 end
 
+# Complete a todo item from a list
 post '/lists/:list_id/todos/:todo_index/complete' do
-  @list_id = params[:list_index].to_i
+  @list_id = params[:list_id].to_i
   todo_id = params[:todo_index].to_i
   @list_detail = session[:lists][@list_id]
   @list_detail[:todos][todo_id][:completed] = params[:completed] == 'true'
   session[:success] = 'The todo has been updated.'
   redirect "lists/#{@list_id}"
+end
+
+post '/lists/:list_id/complete_all' do
+  list_id = params[:list_id].to_i
+  list_detail = session[:lists][list_id]
+  list_detail[:todos].each { |todo| todo[:completed] = true }
+
+  redirect "lists/#{list_id}"
 end
