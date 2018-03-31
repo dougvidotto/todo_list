@@ -1,6 +1,6 @@
-<section id="todos">
+<section id="todos"  class="<%= list_class(@list_detail) %>" >
   <header>
-    <h2 id="lists"><%= @list_detail[:name] %></h2>
+    <h2><%= @list_detail[:name] %></h2>
     <ul>
       <li>
         <form action='/lists/<%= @list_id %>/complete_all' method="post">

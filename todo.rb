@@ -139,3 +139,22 @@ post '/lists/:list_id/complete_all' do
 
   redirect "lists/#{list_id}"
 end
+
+helpers do
+  def is_complete?(list)
+    return false if list[:todos].empty?
+    remaining_todos(list) == 0
+  end
+
+  def list_class(list)
+    'complete' if is_complete?(list)
+  end
+
+  def remaining_todos(list)
+    list[:todos].count { |todo| !todo[:completed] }
+  end
+
+  def sort_by_completed(list)
+    list[:todos].sort_by { |todo| todo[:completed] ? 1 : 0 }
+  end
+end
